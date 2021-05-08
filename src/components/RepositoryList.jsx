@@ -1,38 +1,31 @@
+import { useCallback, useEffect, useState } from 'react';
+
 import { RepositoryItem } from './RepositoryItem';
 
+import '../styles/repositories.scss';
+
+// https://api.github.com/orgs/rocketseat/repos
+
 export function ReporitoryList() {
-  const repositoryUnform = {
-    name: 'unform',
-    description: 'About Performance-focused API for React forms rocket',
-    link: 'https://github.com/unform/unform'
-  }
+  const [repositories, setRepositories] = useState([]);
 
-  const repositoryReactNative = {
-    name: 'react-native',
-    description: 'A framework for building native apps with React.',
-    link: 'https://github.com/facebook/react-native'
-  }
-
-  const repositoryReact = {
-    name: 'react',
-    description: 'A declarative, efficient, and flexible JavaScript library for building user interfaces.',
-    link: 'https://github.com/facebook/react'
-  }
+  useEffect(() => {
+    fetch('https://api.github.com/orgs/rocketseat/repos')
+      .then(response => response.json())
+      .then(data => setRepositories(data))
+  }, [])
 
   return (
     <section className="repository-list">
       <h1>Lista de repositórios</h1>
 
       <ul>
-        <RepositoryItem 
-          repository={repositoryUnform}
-        />
-        <RepositoryItem 
-          repository={repositoryReactNative}
-        />
-        <RepositoryItem 
-          repository={repositoryReact}
-        />          
+        {repositories.map((repository) => (
+          <RepositoryItem
+            key={repository.name}
+            repository={repository}
+          />
+        ))}       
       </ul>
     </section>
   )
